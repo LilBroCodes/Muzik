@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Zenemegosztas</title>
+    <title>Shared String Display</title>
 </head>
 <body>
-    <h1>Zenemegosztas</h1>
+    <h1>Shared String Display</h1>
 
     <div id="stringList"></div>
 
-    <label for="textInput">Ide ird a cimet / linket:</label>
-    <input type="text" id="textInput" placeholder="Tehat IDE" />
+    <label for="textInput">Enter a string:</label>
+    <input type="text" id="textInput" placeholder="Type your string here" />
 
-    <button id="saveButton">Bekuldes</button>
+    <button id="saveButton">Save String</button>
 
     <script>
         // Function to load and display saved strings
@@ -39,18 +39,23 @@
                     .then(data => {
                         data.savedStrings.push(text);
 
-                        // Update the JSON file
+                        // Replace 'your-access-token' with your actual GitHub personal access token
+                        const accessToken = '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';
+
+                        // Content to update the JSON file
+                        const updatedContent = {
+                            message: 'Update saved strings',
+                            content: btoa(JSON.stringify(data, null, 2)), // Convert data to base64
+                            sha: data.sha
+                        };
+
                         fetch('./txt.json', {
                             method: 'PUT',
                             headers: {
-                                'Authorization': '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',
+                                'Authorization': `Bearer ${accessToken}`,
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify({
-                                message: 'Add new string',
-                                content: btoa(JSON.stringify(data, null, 2)),
-                                sha: data.sha
-                            })
+                            body: JSON.stringify(updatedContent),
                         }).then(() => {
                             loadSavedStrings();
                             document.getElementById('textInput').value = '';
