@@ -1,66 +1,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shared String Display</title>
+    <title>Save String to LocalStorage</title>
 </head>
 <body>
-    <h1>Shared String Display</h1>
-
-    <div id="stringList"></div>
+    <h1>Save String to LocalStorage</h1>
 
     <label for="textInput">Enter a string:</label>
     <input type="text" id="textInput" placeholder="Type your string here" />
 
-    <button id="saveButton">Save String</button>
+    <button id="saveButton">Save to LocalStorage</button>
+
+    <ul id="savedStringsList"></ul>
 
     <script>
-        // Function to load and display saved strings
-        function loadSavedStrings() {
-            fetch('https://raw.githubusercontent.com/yourusername/yourrepository/main/saved_strings.json')
-                .then(response => response.json())
-                .then(data => {
-                    const stringList = document.getElementById('stringList');
-                    stringList.innerHTML = '';
-
-                    data.savedStrings.forEach(string => {
-                        const listItem = document.createElement('div');
-                        listItem.textContent = string;
-                        stringList.appendChild(listItem);
-                    });
-                });
-        }
-
-        // Function to save a new string
+        // Function to save the string to localStorage
         function saveString() {
-            const text = document.getElementById('textInput').value;
+            const text = document.getElementById("textInput").value;
             if (text) {
-                fetch('https://raw.githubusercontent.com/yourusername/yourrepository/main/saved_strings.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        data.savedStrings.push(text);
+                // Get the existing strings from localStorage
+                const savedStrings = JSON.parse(localStorage.getItem("savedStrings")) || [];
 
-                        // Update the JSON file
-                        fetch('https://api.github.com/repos/yourusername/yourrepository/contents/saved_strings.json', {
-                            method: 'PUT',
-                            headers: {
-                                'Authorization': 'Bearer your-personal-access-token',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                message: 'Add new string',
-                                content: btoa(JSON.stringify(data, null, 2)),
-                                sha: data.sha
-                            })
-                        }).then(() => {
-                            loadSavedStrings();
-                            document.getElementById('textInput').value = '';
-                        });
-                    });
+                // Add the new string to the array
+                savedStrings.push(text);
+
+                // Save the updated array back to localStorage
+                localStorage.setItem("savedStrings", JSON.stringify(savedStrings));
+
+                // Display the saved strings
+                displaySavedStrings();
             }
         }
 
-        document.getElementById('saveButton').addEventListener('click', saveString);
-        loadSavedStrings();
+        // Function to display the saved strings
+        function displaySavedStrings() {
+            const savedStrings = JSON.parse(localStorage.getItem("savedStrings")) || [];
+            const savedStringsList = document.getElementById("savedStringsList");
+            savedStringsList.innerHTML = "";
+
+            savedStrings.forEach((string) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = string;
+                savedStringsList.appendChild(listItem);
+            });
+        }
+
+        // Attach the saveString function to the button's click event
+        document.getElementById("saveButton").addEventListener("click", saveString);
+
+        // Display any saved strings when the page loads
+        displaySavedStrings();
     </script>
 </body>
 </html>
