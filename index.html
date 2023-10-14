@@ -16,7 +16,7 @@
     <script>
         // Function to load and display saved strings
         function loadSavedStrings() {
-            fetch('https://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json')
+            fetch('./txt.json')
                 .then(response => response.json())
                 .then(data => {
                     const stringList = document.getElementById('stringList');
@@ -34,13 +34,13 @@
         function saveString() {
             const text = document.getElementById('textInput').value;
             if (text) {
-                fetch('https://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json')
+                fetch('./txt.json')
                     .then(response => response.json())
                     .then(data => {
                         data.savedStrings.push(text);
 
                         // Update the JSON file
-                        fetch('https://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json', {
+                        fetch('./txt.json', {
                             method: 'PUT',
                             headers: {
                                 'Authorization': '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',
