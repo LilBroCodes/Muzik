@@ -16,7 +16,7 @@
     <script>
         // Function to load and display saved strings
         function loadSavedStrings() {
-            fetch('hhttps://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json')
+            fetch('https://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json')
                 .then(response => response.json())
                 .then(data => {
                     const stringList = document.getElementById('stringList');
@@ -34,7 +34,7 @@
         function saveString() {
             const text = document.getElementById('textInput').value;
             if (text) {
-                fetch('hhttps://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json')
+                fetch('https://raw.githubusercontent.com/LilBroCodes/Muzik/main/txt.json')
                     .then(response => response.json())
                     .then(data => {
                         data.savedStrings.push(text);
